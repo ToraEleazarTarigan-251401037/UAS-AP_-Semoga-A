@@ -1,3 +1,3 @@
 # UAS-AP_-Semoga-A
-UAS LAB ALPRO Sem 2 Semoga A
+UAS LAB ALPRO Sem 2 Semoga A \n
 Tora Eleazar Tarigan (251401037)
