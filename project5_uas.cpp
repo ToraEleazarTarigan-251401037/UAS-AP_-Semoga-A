@@ -6,85 +6,68 @@
 #include <ctime>
 using namespace std;
 
-// Daftar negara
+// Daftar negara yang tersedia
 vector<string> daftarNegara = {
-    "indonesia", "nigeria", "australia", "kolombia", "venezuela", "albania", "laos", "rusia", "uganda", "prancis", "monako"
+    "indonesia", "nigeria", "australia", "kolombia", "venezuela",
+    "albania", "laos", "rusia", "uganda", "prancis", "monako"
 };
 
-// Fungsi untuk membuat tampilan negara dengan huruf yang dihilangkan secara random
-string buatTebakan(const string& negara) {
-    string tebakan = negara;
-    int panjang = negara.length();
+// Menyembunyikan sebagian huruf dari nama negara
+string buatHasil(const string& negara) {
+    string tersamar = negara;
+    int targetSembunyi = negara.length() * (40 + rand() % 21) / 100;
+    if (targetSembunyi < 1) targetSembunyi = 1;
 
-    // Tentukan jumlah huruf yang dihilangkan (sekitar 40-60% dari panjang)
-    int jumlahHilang = panjang * (40 + rand() % 21) / 100;
-    if (jumlahHilang < 1) jumlahHilang = 1;
-
-    // Buat indeks posisi yang akan dihilangkan (jangan hilangkan spasi)
-    vector<int> posisi;
-    for (int i = 0; i < panjang; i++) {
-        if (negara[i] != ' ') {
-            posisi.push_back(i);
+    int progres = 0;
+    do {
+        int posAcak = rand() % negara.length();
+        if (tersamar[posAcak] != ' ' && tersamar[posAcak] != '_') {
+            tersamar[posAcak] = '_';
+            progres++;
         }
-    }
+    } while (progres < targetSembunyi);
 
-    // Acak posisi
-    for (int i = posisi.size() - 1; i > 0; i--) {
-        int j = rand() % (i + 1);
-        swap(posisi[i], posisi[j]);
-    }
-
-    // Hilangkan huruf sesuai jumlah
-    for (int i = 0; i < jumlahHilang && i < (int)posisi.size(); i++) {
-        tebakan[posisi[i]] = '_';
-    }
-
-    return tebakan;
+    return tersamar;
 }
 
+// Main loop game
 int main() {
     srand(time(0));
 
-    cout << "==============================" << endl;
-    cout << "   GAME TEBAK NEGARA  :D      " << endl;
-    cout << "==============================" << endl;
+    cout << "==============================\n";
+    cout << "      GAME TEBAK NEGARA       \n";
+    cout << "==============================\n";
 
     int skor = 0;
-    char lagi;
+    char ulang = 'y';
 
-    do {
-        // Pilih negara secara random
-        int indeks = rand() % daftarNegara.size();
-        string negara = daftarNegara[indeks];
-        string tebakan = buatTebakan(negara);
+    while (tolower(ulang) == 'y') {
+        string negara = daftarNegara[rand() % daftarNegara.size()];
+        string tampilan = buatHasil(negara);
 
-        cout << "\nTebak negara: " << tebakan << endl;
+        cout << "\nTebak negara: " << tampilan << "\n";
         cout << "Negara apakah yang dimaksud? ";
 
-        string jawaban;
-        cin >> jawaban;
+        if (skor > 0) cin.ignore();
 
-        // Ubah jawaban ke huruf kecil untuk perbandingan
-        transform(jawaban.begin(), jawaban.end(), jawaban.begin(), ::tolower);
+        string jawaban;
+        getline(cin, jawaban);
+
+        for (char& huruf : jawaban)
+            huruf = tolower(huruf);
 
         if (jawaban == negara) {
             skor++;
-            cout << "Selamat! Anda benar." << endl;
+            cout << "Selamat! Anda benar.\n";
         } else {
-            cout << "Maaf, jawaban Anda salah. Coba lagi." << endl;
-            cout << "Jawaban yang benar adalah: " << negara << endl;
+            cout << "Maaf, jawaban anda salah. Coba lagi.\n";
         }
 
-        cout << "Skor Anda: " << skor << endl;
+        cout << "Skor Anda: " << skor << "\n";
         cout << "Ingin bermain lagi? (y/n): ";
-        cin >> lagi;
-        lagi = tolower(lagi);
+        cin >> ulang;
+    }
 
-    } while (lagi == 'y');
-
-    cout << "\nGame Selesai :D" << endl;
-    cout << "Skor akhir Anda: " << skor << endl;
-    cout << "Terima kasih sudah bermain!" << endl;
-
+    cout << "\nGame Selesai :D\n";
     return 0;
 }
