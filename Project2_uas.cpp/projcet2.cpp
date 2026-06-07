@@ -17,17 +17,17 @@ int main() {
     string namaPemain;
     getline(cin, namaPemain);
 
-    // Loop
+  
     char ulang = 'Y';
     while (toupper(ulang) == 'Y') {
         bersihkanLayar();
         tampilkanBanner();
         cout << "\nHalo, " << namaPemain << "! Mari bermain.\n";
 
-        // Jalankan satu ronde penuh
+       
         mainkanRonde(namaPemain);
 
-        // Tanya apakah ingin bermain lagi
+     
         cout << "Apakah Anda ingin bermain lagi? (Y/N): ";
         cin >> ulang;
     }
