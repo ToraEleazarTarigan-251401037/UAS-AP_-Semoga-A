@@ -7,7 +7,7 @@
 
 using namespace std;
 
-// Struct untuk Kendaraan
+
 struct Kendaraan {
     string plat;
     string merk;
@@ -15,7 +15,7 @@ struct Kendaraan {
     time_t waktu_masuk;
 };
 
-// Class untuk Sistem Parkir
+
 class SistemParkir {
 private:
     vector<Kendaraan> daftarParkir;
@@ -26,7 +26,7 @@ private:
 public:
     SistemParkir(string nama, string id) : namaPetugas(nama), idPetugas(id) {}
     
-    // Function untuk menampilkan header
+ 
     void tampilkanHeader() {
         cout << "\n========================================\n";
         cout << "     SISTEM PARKIR MALL PRIENAL\n";
@@ -36,7 +36,7 @@ public:
         cout << "========================================\n\n";
     }
     
-    // Function untuk menambahkan kendaraan
+
     void tambahKendaraan() {
         if (daftarParkir.size() >= KAPASITAS_MAKS) {
             cout << "MAAF, PARKIRAN SUDAH PENUH! (Maksimal 20 mobil)\n";
@@ -68,7 +68,7 @@ public:
         }
     }
     
-    // Function untuk menampilkan daftar kendaraan
+  
     void tampilkanDaftar() {
         if (daftarParkir.empty()) {
             cout << "Tidak ada kendaraan yang sedang parkir.\n";
@@ -91,18 +91,18 @@ public:
         }
     }
     
-    // Function untuk menghitung biaya
+ 
     double hitungBiaya(time_t masuk) {
         time_t sekarang = time(0);
         double menit = difftime(sekarang, masuk) / 60.0;
         double jam = menit / 60.0;
         
-        // Tarif: Rp5000 per jam pertama, Rp3000 per jam berikutnya
+    
         if (jam <= 1) return 5000;
         return 5000 + (jam - 1) * 3000;
     }
     
-    // Function untuk pembayaran
+ 
     void pembayaran() {
         if (daftarParkir.empty()) {
             cout << "Tidak ada kendaraan yang parkir.\n";
@@ -141,7 +141,7 @@ public:
         }
     }
     
-    // Menu utama
+
     void jalankan() {
         int pilihan;
         do {
@@ -181,9 +181,9 @@ public:
     }
 };
 
-// Fungsi utama
 int main() {
-    // Data petugas (sesuai contoh)
+
+
     string nama = "Endriano Kitswanto";
     string id = "231401073";
     

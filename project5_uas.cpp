@@ -6,13 +6,13 @@
 #include <ctime>
 using namespace std;
 
-// Daftar negara yang tersedia
+
 vector<string> daftarNegara = {
     "indonesia", "nigeria", "australia", "kolombia", "venezuela",
     "albania", "laos", "rusia", "uganda", "prancis", "monako"
 };
 
-// Menyembunyikan sebagian huruf dari nama negara
+
 string buatHasil(const string& negara) {
     string tersamar = negara;
     int targetSembunyi = negara.length() * (40 + rand() % 21) / 100;
@@ -30,7 +30,7 @@ string buatHasil(const string& negara) {
     return tersamar;
 }
 
-// Main loop game
+
 int main() {
     srand(time(0));
 

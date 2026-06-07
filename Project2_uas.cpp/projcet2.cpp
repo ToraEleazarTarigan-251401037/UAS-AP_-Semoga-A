@@ -1,14 +1,8 @@
 
-//  main.cpp  -  Game Tebak Kata
-//  Dibuat untuk  : Nisa (Mahasiswa Semester 2)
-//  Deskripsi     : Game tebak kata berbasis CLI dengan fitur
-//                  tingkat kesulitan, hint, skor, & leaderboard.
-
-
 #include <iostream>
 #include <cstdlib>
 #include <ctime>
-#include "TebakKata.h"
+#include "project2.h"
 
 using namespace std;
 
@@ -38,7 +32,7 @@ int main() {
         cin >> ulang;
     }
 
-    // Pesan penutup
+
 bersihkanLayar();
 tampilkanBanner();
 

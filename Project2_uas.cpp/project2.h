@@ -8,7 +8,7 @@
 #include <cctype>
 using namespace std;
 
-//  KONSTANTA & BANK KATA
+
 
 const int JUMLAH_KATA      = 15;
 const int MAX_LEADERBOARD  = 5;
@@ -21,16 +21,14 @@ const string bankKata[JUMLAH_KATA] = {
 };
 
 
-//  STRUCT
 
-// Menyimpan state permainan yang sedang berjalan
 struct KataGame {
     string kataAsli;          
     string statusTebakan;   
     int sisaNyawa;        
 };
 
-// Menyimpan satu entri skor di leaderboard
+
 struct Skor {
     string namaPemain;
     int    nilai;
@@ -38,16 +36,13 @@ struct Skor {
 };
 
 
-//  VARIABEL GLOBAL  -  Leaderboard
 
 Skor  leaderboard[MAX_LEADERBOARD];
 int   jumlahSkorTersimpan = 0;
 
 
-//  UTILITAS TAMPILAN
 
 
-// Bersihkan layar (cross-platform)
 void bersihkanLayar() {
 #ifdef _WIN32
     system("cls");
@@ -70,21 +65,17 @@ void tampilkanBanner() {
 }
 
 
-//  INISIALISASI & PILIH KESULITAN
 
-// Pilih kata acak dari bank kata
 string pilihKataAcak() {
     return bankKata[rand() % JUMLAH_KATA];
 }
 
-// Inisialisasi struct KataGame via pointer
 void inisialisasiGame(KataGame* game, const string& kata, int nyawa) {
     game->kataAsli      = kata;
     game->sisaNyawa     = nyawa;
-    game->statusTebakan = string(kata.length(), '_');  // semua underscore
+    game->statusTebakan = string(kata.length(), '_');  
 }
 
-// Tampilkan menu kesulitan dan kembalikan jumlah max kesalahan
 int pilihKesulitan() {
     int pilihan;
     cout << "\nPilih Tingkat Kesulitan:\n";
@@ -102,22 +93,19 @@ int pilihKesulitan() {
     }
 }
 
-// Kembalikan string nama kesulitan berdasarkan nyawa awal
+
 string namaKesulitan(int nyawaAwal) {
     if (nyawaAwal == 8) return "Easy";
     if (nyawaAwal == 6) return "Medium";
     return "Hard";
 }
 
-//  VALIDASI & PROSES TEBAKAN
-
-// Cek apakah huruf sudah pernah ditebak (benar atau salah)
 bool sudahDitebak(char huruf,
                   const string& statusTebakan,
                   const char tebakanSalah[],
                   int jumlahSalah)
 {
-    // Cek di status tebakan (huruf benar yang sudah terbuka)
+
     for (char c : statusTebakan)
         if (tolower(c) == tolower(huruf)) return true;
 
@@ -128,8 +116,7 @@ bool sudahDitebak(char huruf,
     return false;
 }
 
-// Proses tebakan pemain; modifikasi KataGame via pointer
-// Kembalikan: true jika tebakan benar, false jika salah
+
 bool prosesTebakan(KataGame* game,
                    char huruf,
                    char tebakanSalah[],
@@ -137,14 +124,14 @@ bool prosesTebakan(KataGame* game,
 {
     bool ada = false;
 
-    // cek seluruh huruf dalam kata
+
     for (size_t i = 0; i < game->kataAsli.length(); i++) {
 
-        // bandingkan tanpa membedakan huruf besar/kecil
+
         if (tolower(game->kataAsli[i]) ==
             tolower(huruf))
         {
-            // buka semua posisi huruf yang sama
+        
             game->statusTebakan[i] =
                 game->kataAsli[i];
 
@@ -152,7 +139,7 @@ bool prosesTebakan(KataGame* game,
         }
     }
 
-    // jika huruf tidak ditemukan
+  
     if (!ada) {
 
         tebakanSalah[*jumlahSalah] =
@@ -166,7 +153,7 @@ bool prosesTebakan(KataGame* game,
     return ada;
 }
 
-//  CEK KONDISI MENANG / KALAH
+
 
 bool cekMenang(const KataGame* game) {
     return game->statusTebakan == game->kataAsli;
@@ -177,24 +164,23 @@ bool cekKalah(const KataGame* game) {
 }
 
 
-//  TAMPILAN GAME
 
 
 void tampilkanHUD(const KataGame* game,
                   const char tebakanSalah[],
                   int jumlahSalah)
 {
-    // Gambar nyawa sebagai v
+  
     cout << "\nNyawa: ";
     for (int i = 0; i < game->sisaNyawa; i++) cout << "[v] ";
     cout << "\n";
 
-    // Kata yang sebagian terbuka
+
     cout << "\nKata  : ";
     for (char c : game->statusTebakan) cout << c << " ";
     cout << "\n";
 
-    // Daftar huruf salah
+  
     cout << "\nHuruf salah: ";
     if (jumlahSalah == 0) {
         cout << "(belum ada)";
@@ -209,37 +195,33 @@ void tampilkanHUD(const KataGame* game,
 }
 
 
-//  FITUR HINT
 
-// Buka huruf pertama kata rahasia; kurangi 1 nyawa via pointer
 void gunakanHint(KataGame* game) {
     if (game->sisaNyawa <= 1) {
         cout << ">> Nyawa tidak cukup untuk menggunakan hint!\n";
         return;
     }
-    // Buka huruf pertama
+  
     game->statusTebakan[0] = game->kataAsli[0];
-    game->sisaNyawa--;    // biaya 1 nyawa
+    game->sisaNyawa--;   
     cout << ">> Hint: huruf pertama adalah '" << game->kataAsli[0] << "' (-1 nyawa)\n";
 }
 
-//  SISTEM SKOR
 
-// Hitung skor berdasarkan sisa nyawa dan kesulitan
 int hitungSkor(int sisaNyawa, int nyawaAwal) {
     int multiplier = 1;
-    if (nyawaAwal == 6) multiplier = 2;   // Medium
-    if (nyawaAwal == 4) multiplier = 3;   // Hard
+    if (nyawaAwal == 6) multiplier = 2;   
+    if (nyawaAwal == 4) multiplier = 3;   
     return sisaNyawa * 100 * multiplier;
 }
 
-// Simpan skor ke leaderboard (insertion sort sederhana, descending)
+
 void simpanSkor(const string& nama, int nilai, const string& kesulitan) {
     if (jumlahSkorTersimpan < MAX_LEADERBOARD) {
         leaderboard[jumlahSkorTersimpan] = {nama, nilai, kesulitan};
         jumlahSkorTersimpan++;
     } else {
-        // Ganti skor terkecil jika skor baru lebih besar
+       
         int idxMin = 0;
         for (int i = 1; i < MAX_LEADERBOARD; i++)
             if (leaderboard[i].nilai < leaderboard[idxMin].nilai)
@@ -248,7 +230,6 @@ void simpanSkor(const string& nama, int nilai, const string& kesulitan) {
             leaderboard[idxMin] = {nama, nilai, kesulitan};
     }
 
-    // Urutkan descending (bubble sort)
     for (int i = 0; i < jumlahSkorTersimpan - 1; i++)
         for (int j = 0; j < jumlahSkorTersimpan - 1 - i; j++)
             if (leaderboard[j].nilai < leaderboard[j + 1].nilai)
@@ -266,7 +247,7 @@ void tampilkanLeaderboard() {
         cetakGaris('-');
         for (int i = 0; i < jumlahSkorTersimpan; i++) {
             cout << "   " << (i + 1) << ".   ";
-            // Padding nama
+          
             string nama = leaderboard[i].namaPemain;
             cout << nama;
             for (int p = nama.length(); p < 18; p++) cout << ' ';
@@ -279,47 +260,47 @@ void tampilkanLeaderboard() {
 
 
 void mainkanRonde(const string& namaPemain) {
-    //Pilih kesulitan
+   
     int nyawaAwal = pilihKesulitan();
     string kata   = pilihKataAcak();
 
-    //Inisialisasi state via pointer
+  
     KataGame game;
     inisialisasiGame(&game, kata, nyawaAwal);
 
-    // --- Data tebakan salah ---
+
     char tebakanSalah[26];
     int  jumlahSalah = 0;
 
     bool selesai = false;
 
-    //LOOP UTAMA PERMAINAN 
+
     while (!selesai) {
         bersihkanLayar();
         tampilkanBanner();
         tampilkanHUD(&game, tebakanSalah, jumlahSalah);
 
-        // Tawaran hint
+    
         cout << "Masukkan satu huruf untuk menebak kata, atau ketik '?' untuk bantuan (mengurangi 1 nyawa):";
         char input;
         cin >> input;
 
-        //Proses hint
+     
         if (input == '?') {
             gunakanHint(&game);
         }
-        //Proses huruf biasa
+       
         else if (isalpha(input)) {
             input = tolower(input);
 
-            // Cek duplikasi
+       
             if (sudahDitebak(input, game.statusTebakan,
                              tebakanSalah, jumlahSalah)) {
                 cout << "\n>> Huruf '" << input
                      << "' sudah pernah ditebak! Coba huruf lain.\n";
                 cout << "   (Tekan Enter untuk lanjut...)\n";
                 cin.ignore(); cin.get();
-                continue;   // tidak kurangi nyawa
+                continue;  
             }
 
             bool benar = prosesTebakan(&game, input,
@@ -338,7 +319,7 @@ void mainkanRonde(const string& namaPemain) {
             continue;
         }
 
-        // Cek kondisi akhir 
+      
         if (cekMenang(&game)) {
             bersihkanLayar();
             tampilkanBanner();
@@ -361,7 +342,7 @@ void mainkanRonde(const string& namaPemain) {
         }
     }
 
-    // Tampilkan leaderboard setelah setiap ronde
+ 
     cout << "\n";
     tampilkanLeaderboard();
 }
